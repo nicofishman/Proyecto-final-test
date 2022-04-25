@@ -1,10 +1,23 @@
 import { Router } from "express";
-import { getByArtistName, login, callback, topUser, getAccessToken, me, currentPlaying, playSong, pauseSong, nextSong, previousSong } from "../Controllers/spotify.controller.js";
+import { getByArtistName, 
+    login, 
+    callback, 
+    topUser, 
+    getAccessToken, 
+    me, 
+    currentPlaying, 
+    playSong, 
+    pauseSong, 
+    nextSong, 
+    previousSong, 
+    getByAlbum 
+} from "../Controllers/spotify.controller.js";
 
 const routerSpotify = Router();
 
 
 routerSpotify.get('/artist/:artist', getByArtistName);
+routerSpotify.get('/album/:album', getByAlbum)
 routerSpotify.get('/login', login);
 routerSpotify.get('/callback', callback);
 routerSpotify.get('/top', topUser);
