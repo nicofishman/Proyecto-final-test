@@ -146,7 +146,11 @@ export const currentPlaying = (req, res) => {
         res.clearCookie('redirect');
         spotifyApi.getMyCurrentPlayingTrack()
             .then(function (data) {
-                resSend(res, data.body);
+                if (data.body) {
+                    resSend(res, data.body);
+                } else { 
+                    resSend(res, 'No Device is playing')
+                }
             }, function (err) {
                 console.log('Something went wrong!', err);
             });
