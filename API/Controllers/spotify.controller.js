@@ -53,9 +53,9 @@ export const callback = (req, res) => {
         return
     }
     spotifyApi.
-        authorizationCodeGrant(code)
-        .then(data => {
-            const accessToken = data.body['access_token'];
+    authorizationCodeGrant(code)
+    .then(data => {
+        const accessToken = data.body['access_token'];
             const refreshToken = data.body['refresh_token'];
             const expiresIn = data.body['expires_in'];
 
@@ -64,14 +64,14 @@ export const callback = (req, res) => {
             console.log('Refreshed!');
             // console.log('accessToken: ' + accessToken);
             // console.log('refreshToken: ' + refreshToken);
-
+            
             // console.log(`The token expires in ${expiresIn} seconds`);
             res.redirect(req.cookies.redirect);
-
+            
             setInterval(async () => {
                 const data = await spotifyApi.refreshAccessToken();
                 const access_token = data.body['access_token'];
-
+                
                 console.log('accessToken: ' + access_token);
                 console.log('The token has been refreshed!');
                 spotifyApi.setAccessToken(access_token);
@@ -81,14 +81,31 @@ export const callback = (req, res) => {
             console.log('Something went wrong when retrieving an access token', err);
             res.send('Something went wrong when retrieving an access token');
         });
-}
+    }
+    
+    export const getAccessToken = (req, res) => {
+        const access_token = spotifyApi.getAccessToken()
+        res.send(access_token);
+    }
+    
+    export const getByAlbum = (req, res) => {
+        console.log('album', req.params.album)
+        if (spotifyApi.getAccessToken() == null) {
+            res.cookie('redirect', `/spotify/album/${req.params.album}`);
+            res.redirect('/spotify/login');
+        } else {
+            res.clearCookie('redirect');
+            spotifyApi.searchAlbums(req.params.album)
+                .then(data => {
+                    resSend(res, data);
+                })
+                .catch(err => {
+                    resSend(res, err);
+                });
+        }
+    }
 
-export const getAccessToken = (req, res) => {
-    const access_token = spotifyApi.getAccessToken()
-    res.send(access_token);
-}
-
-export const getByArtistName = (req, res) => {
+    export const getByArtistName = (req, res) => {
     if (spotifyApi.getAccessToken() == null) {
         res.cookie('redirect', `/spotify/artist/${req.params.artist}`);
         res.redirect('/spotify/login');
@@ -146,7 +163,11 @@ export const currentPlaying = (req, res) => {
         res.clearCookie('redirect');
         spotifyApi.getMyCurrentPlayingTrack()
             .then(function (data) {
-                resSend(res, data.body);
+                if (data.body) {
+                    resSend(res, data.body);
+                } else { 
+                    resSend(res, 'No Device is playing')
+                }
             }, function (err) {
                 console.log('Something went wrong!', err);
             });
