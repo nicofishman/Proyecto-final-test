@@ -3,6 +3,8 @@ import cors from 'cors';
 import routerSpotify from './Routes/spotify.routes.js';
 import cookieParser from 'cookie-parser'
 
+//CRASH: SKIP CUANDO ESTA REPRODUCIENDO
+
 const app = express();
 
 const corsOptions = {

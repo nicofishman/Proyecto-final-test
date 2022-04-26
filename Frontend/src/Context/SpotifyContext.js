@@ -29,3 +29,8 @@ export const playSong = async () => {
     const res = await axios.get('http://127.0.0.1:3001/spotify/play');
     return res;
 }
+
+export const getActiveDevices = async () => {
+    const res = await axios.get('http://127.0.0.1:3001/spotify/devices');
+    return res;
+}
