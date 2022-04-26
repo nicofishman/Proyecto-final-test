@@ -2,22 +2,19 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import PlayingBar from './Components/PlayingBar';
 import Box from '@mui/material/Box';
-// import { useSpotify } from './Context/SpotifyContext';
-
+import {getCurrentPlaying, getTop} from './Context/SpotifyContext';
 
 function App() {
     const [currentPlaying, setCurrentPlaying] = useState(null);
     const [previousCurrentPlaying, setPreviousCurrentPlaying] = useState(null);
     const fetchCurrentPlaying = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:3001/spotify/currentplaying');
-            const json = await response.json();
-            return json;
+            const response = await getCurrentPlaying();
+            return response.data;
         } catch {
-            await fetch('http://127.0.0.1:3001/spotify/top')
-            const response = await fetch('http://127.0.0.1:3001/spotify/currentplaying');
-            const json = await response.json();
-            return json;
+            await getTop();
+            const response = await getCurrentPlaying();
+            return response.data;
         }
     }
     useEffect(() => {

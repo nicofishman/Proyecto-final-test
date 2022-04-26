@@ -7,27 +7,9 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-
-// import { useSpotify } from '../Context/SpotifyContext';
+import {previousSong, nextSong, pauseSong, playSong} from '../Context/SpotifyContext';
 
 function PlayingBar({ currentPlaying }) {
-    const previousSong = async () => {
-        await fetch('http://127.0.0.1:3001/spotify/previous')
-    }
-
-    const nextSong = async () => {
-        await fetch('http://127.0.0.1:3001/spotify/next')
-    }
-
-    const pauseSong = async () => {
-        await fetch('http://127.0.0.1:3001/spotify/pause')
-    }
-
-    const playSong = async () => {
-        await fetch('http://127.0.0.1:3001/spotify/play')
-    }
-
-
     const formatMsToMinutes = (ms) => {
         const minutes = Math.floor(ms / 60000);
         const seconds = ((ms % 60000) / 1000).toFixed(0);

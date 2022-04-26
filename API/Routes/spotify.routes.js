@@ -10,7 +10,9 @@ import { getByArtistName,
     pauseSong, 
     nextSong, 
     previousSong, 
-    getByAlbum 
+    getByAlbum,
+    currentPlaybackState,
+    getActiveDevices 
 } from "../Controllers/spotify.controller.js";
 
 const routerSpotify = Router();
@@ -24,9 +26,11 @@ routerSpotify.get('/top', topUser);
 routerSpotify.get('/token', getAccessToken);
 routerSpotify.get('/me', me);
 routerSpotify.get('/currentplaying', currentPlaying)
+routerSpotify.get('/currentplaybackstate', currentPlaybackState)
 routerSpotify.get('/play', playSong)
 routerSpotify.get('/pause', pauseSong)
 routerSpotify.get('/next', nextSong)
 routerSpotify.get('/previous', previousSong)
+routerSpotify.get('/devices', getActiveDevices)
 
 export default routerSpotify;
