@@ -191,24 +191,28 @@ export const me = (req, res) => {
     }
 };
 
-export const currentPlaying = (req, res) => {
+export const currentPlaying = (req, res, toFunction = false) => {
     if (spotifyApi.getAccessToken() == null) {
         res.cookie("redirect", "/spotify/currentplaying");
         res.redirect("/spotify/login");
     } else {
         res.clearCookie("redirect");
-        spotifyApi.getMyCurrentPlayingTrack().then(
-            function (data) {
-                if (data.body) {
-                    resSend(res, data.body);
-                } else {
-                    resSend(res, "No Device is playing");
+        if (!toFunction) {
+            spotifyApi.getMyCurrentPlayingTrack().then(
+                function (data) {
+                    if (data.body) {
+                        resSend(res, data.body);
+                    } else {
+                        resSend(res, "No Device is playing");
+                    }
+                },
+                function (err) {
+                    console.log("Something went wrong!", err);
                 }
-            },
-            function (err) {
-                console.log("Something went wrong!", err);
-            }
-        );
+            );
+        } else {
+            return spotifyApi.getMyCurrentPlayingTrack().then((data) => data.body);
+        }
     }
 };
 
@@ -238,6 +242,11 @@ export const pauseSong = async (req, res) => {
         const activeDevice = await getActiveDeviceId();
         if (!activeDevice) {
             resSend(res, "No Device is playing");
+            return;
+        }
+        const currentPlayingSong = await currentPlaying(req, res, true);
+        if (!currentPlayingSong?.is_playing) {
+            resSend(res, "No song is playing");
             return;
         }
         spotifyApi.pause();
@@ -286,6 +295,11 @@ export const playSong = async (req, res) => {
         const activeDevice = await getActiveDeviceId();
         if (!activeDevice) {
             resSend(res, "No Device is playing");
+            return;
+        }
+        const currentPlayingSong = await currentPlaying(req, res, true);
+        if (currentPlayingSong?.is_playing) {
+            resSend(res, "Song is already playing");
             return;
         }
         spotifyApi.play();

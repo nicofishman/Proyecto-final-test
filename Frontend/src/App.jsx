@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import PlayingBar from './Components/PlayingBar';
 import Box from '@mui/material/Box';
-import {getCurrentPlaying, getTop, getActiveDevices} from './Context/SpotifyContext';
+import { getCurrentPlaying, getTop, getActiveDevices } from './Context/SpotifyContext';
 
 function App() {
     const [hasActiveDevices, setHasActiveDevices] = useState(false);
